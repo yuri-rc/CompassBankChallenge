@@ -1,5 +1,7 @@
 package br.com.compass;
 
+import br.com.compass.adapter.controller.UserController;
+
 import java.util.Scanner;
 
 public class App {
@@ -25,13 +27,14 @@ public class App {
             System.out.print("Choose an option: ");
 
             int option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
                     bankMenu(scanner);
                     return;
                 case 2:
-                    // ToDo...
+                    UserController.create(scanner);
                     System.out.println("Account Opening.");
                     break;
                 case 0:
