@@ -32,4 +32,30 @@ public class UserRepository implements UserRepositoryInterface {
         }
         return user;
     }
+
+    @Override
+    public User getByCpf(String cpf) throws Exception {
+        String sql = "SELECT * FROM BankUser WHERE cpf = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, cpf);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    User user = new User(
+                            resultSet.getString("name"),
+                            resultSet.getDate("birth_date"),
+                            resultSet.getString("cpf"),
+                            resultSet.getString("phone"),
+                            resultSet.getString("password")
+                    );
+                    user.setId(resultSet.getInt("id"));
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
 }

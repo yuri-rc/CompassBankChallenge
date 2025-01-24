@@ -3,13 +3,15 @@ package br.com.compass.adapter.controller;
 import br.com.compass.core.domain.user.User;
 import br.com.compass.core.services.event.EventPublisher;
 import br.com.compass.core.usecase.user.CreateUserUseCase;
+import br.com.compass.core.usecase.user.LoginUserUseCase;
 import br.com.compass.core.usecase.user.input.CreateUserInput;
+import br.com.compass.core.usecase.user.input.LoginUserInput;
 import br.com.compass.infra.repository.UserRepository;
 
 import java.util.Scanner;
 
 public class UserController {
-    public static User create(Scanner scanner){
+    public static void create(Scanner scanner){
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         System.out.print("Enter your birth date (YYYY-MM-DD): ");
@@ -25,9 +27,9 @@ public class UserController {
         System.out.print("Enter account type: ");
         String accountType = scanner.nextLine();
 
-        CreateUserUseCase createAccountUseCase = new CreateUserUseCase(new UserRepository(), new EventPublisher());
+        CreateUserUseCase createUserUseCase = new CreateUserUseCase(new UserRepository(), new EventPublisher());
         try {
-            return createAccountUseCase.execute(new CreateUserInput(
+            createUserUseCase.execute(new CreateUserInput(
                     name,
                     birthDate,
                     cpf,
@@ -35,6 +37,23 @@ public class UserController {
                     password,
                     confirmPassword,
                     accountType
+            ));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage() + "\nTry again.");
+        }
+    }
+
+    public static User login(Scanner scanner){
+        System.out.print("Enter your CPF: ");
+        String cpf = scanner.nextLine();
+        System.out.print("Enter account password: ");
+        String password = scanner.nextLine();
+
+        LoginUserUseCase loginUserUseCase = new LoginUserUseCase(new UserRepository());
+        try {
+            return loginUserUseCase.execute(new LoginUserInput(
+                    cpf,
+                    password
             ));
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage() + "\nTry again.");
