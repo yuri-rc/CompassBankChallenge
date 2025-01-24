@@ -1,9 +1,9 @@
-package br.com.compass.core.domain;
+package br.com.compass.core.domain.user;
 
 import java.sql.Date;
 
 public class User {
-
+    private Integer id;
     private final String name;
     private final Date birthDate;
     private final String cpf;
@@ -17,6 +17,10 @@ public class User {
         this.phone = phone;
         this.password = password;
     }
+
+    public void setId(Integer userId) { id = userId; }
+
+    public Integer getId() { return id; }
 
     public String getName() {
         return name;
