@@ -17,7 +17,6 @@ CREATE TABLE Account (
 
 CREATE TABLE Transaction (
     id SERIAL PRIMARY KEY,
-    transaction_type VARCHAR(20) NOT NULL,
     amount NUMERIC(15, 2) NOT NULL,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     source_account_id INT REFERENCES Account(id),
