@@ -41,7 +41,6 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage() + "\nTry again.");
         }
-        return null;
     }
 
     public static User login(Scanner scanner){
