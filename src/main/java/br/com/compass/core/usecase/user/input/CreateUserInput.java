@@ -6,5 +6,6 @@ public record CreateUserInput(
         String cpf,
         String phone,
         String password,
-        String confirmPassword
+        String confirmPassword,
+        String accountType
 ) {}
