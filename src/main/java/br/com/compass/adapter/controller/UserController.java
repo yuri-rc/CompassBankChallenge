@@ -11,7 +11,7 @@ import br.com.compass.infra.repository.UserRepository;
 import java.util.Scanner;
 
 public class UserController {
-    public static User create(Scanner scanner){
+    public static void create(Scanner scanner){
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
         System.out.print("Enter your birth date (YYYY-MM-DD): ");
@@ -29,7 +29,7 @@ public class UserController {
 
         CreateUserUseCase createUserUseCase = new CreateUserUseCase(new UserRepository(), new EventPublisher());
         try {
-            return createUserUseCase.execute(new CreateUserInput(
+            createUserUseCase.execute(new CreateUserInput(
                     name,
                     birthDate,
                     cpf,
@@ -41,7 +41,6 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage() + "\nTry again.");
         }
-        return null;
     }
 
     public static User login(Scanner scanner){
