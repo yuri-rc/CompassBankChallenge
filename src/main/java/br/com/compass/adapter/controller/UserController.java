@@ -1,13 +1,12 @@
 package br.com.compass.adapter.controller;
 
-import br.com.compass.core.domain.user.User;
 import br.com.compass.core.services.event.EventPublisher;
 import br.com.compass.core.usecase.user.CreateUserUseCase;
-import br.com.compass.core.usecase.user.LoginUserUseCase;
 import br.com.compass.core.usecase.user.input.CreateUserInput;
-import br.com.compass.core.usecase.user.input.LoginUserInput;
 import br.com.compass.infra.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserController {
@@ -25,10 +24,11 @@ public class UserController {
         System.out.print("Confirm account password: ");
         String confirmPassword = scanner.nextLine();
         System.out.print("Enter account type: ");
-        String accountType = scanner.nextLine();
 
-        CreateUserUseCase createUserUseCase = new CreateUserUseCase(new UserRepository(), new EventPublisher());
         try {
+            List<String> accountTypes = chooseAccountTypes(scanner);
+            CreateUserUseCase createUserUseCase = new CreateUserUseCase(new UserRepository(), new EventPublisher());
+
             createUserUseCase.execute(new CreateUserInput(
                     name,
                     birthDate,
@@ -36,28 +36,57 @@ public class UserController {
                     phone,
                     password,
                     confirmPassword,
-                    accountType
+                    accountTypes
             ));
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage() + "\nTry again.");
         }
     }
 
-    public static User login(Scanner scanner){
-        System.out.print("Enter your CPF: ");
-        String cpf = scanner.nextLine();
-        System.out.print("Enter account password: ");
-        String password = scanner.nextLine();
+    private static List<String> chooseAccountTypes(Scanner scanner) {
+        String[] accountOptions = {"Checking", "Salary", "Savings"};
+        List<String> selectedAccounts = new ArrayList<>();
 
-        LoginUserUseCase loginUserUseCase = new LoginUserUseCase(new UserRepository());
-        try {
-            return loginUserUseCase.execute(new LoginUserInput(
-                    cpf,
-                    password
-            ));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage() + "\nTry again.");
+        System.out.println("Choose up to 3 account types:");
+        for (int i = 0; i < accountOptions.length; i++) {
+            System.out.println((i + 1) + ". " + accountOptions[i]);
         }
-        return null;
+
+        while (selectedAccounts.size() < 3) {
+            System.out.print("Enter the number of the account you want to add (or '0' to finish): ");
+            String input = scanner.nextLine();
+
+            try {
+                int choice = Integer.parseInt(input);
+
+                if (choice == 0) {
+                    break;
+                }
+
+                if (choice < 1 || choice > accountOptions.length) {
+                    System.out.println("Invalid option. Try again.");
+                    continue;
+                }
+
+                String selectedAccount = accountOptions[choice - 1];
+
+                if (selectedAccounts.contains(selectedAccount)) {
+                    System.out.println("Account already selected. Choose another one.");
+                } else {
+                    selectedAccounts.add(selectedAccount);
+                    System.out.println("Account added: " + selectedAccount);
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+
+        if (selectedAccounts.isEmpty()) {
+            System.out.println("No accounts selected. Operation canceled.");
+            throw new IllegalArgumentException("No accounts were chosen.");
+        }
+
+        return selectedAccounts;
     }
 }

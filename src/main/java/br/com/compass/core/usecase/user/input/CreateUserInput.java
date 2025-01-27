@@ -1,5 +1,7 @@
 package br.com.compass.core.usecase.user.input;
 
+import java.util.List;
+
 public record CreateUserInput(
         String name,
         String birthDate,
@@ -7,5 +9,5 @@ public record CreateUserInput(
         String phone,
         String password,
         String confirmPassword,
-        String accountType
+        List<String> accountTypes
 ) {}

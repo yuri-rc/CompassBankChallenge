@@ -26,12 +26,11 @@ public class CreateUserUseCase implements UseCase<CreateUserInput, User> {
     @Override
     public User execute(CreateUserInput input) {
         new CreateUserVoter().invoke(input);
-
         String hashedPassword = BCrypt.hashpw(input.password(), BCrypt.gensalt());
         User user = new User(input.name(), Date.valueOf(input.birthDate()), input.cpf(), input.phone(), hashedPassword);
         try {
             User savedUser = userRepository.save(user);
-            eventPublisher.publish(new UserCreated(savedUser, input.accountType()));
+            input.accountTypes().forEach(accountType -> eventPublisher.publish(new UserCreated(savedUser, accountType)));
             return savedUser;
         } catch (Exception e) {
             throw new RuntimeException(e);
