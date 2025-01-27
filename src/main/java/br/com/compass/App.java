@@ -1,9 +1,9 @@
 package br.com.compass;
 
 import br.com.compass.adapter.controller.AccountController;
+import br.com.compass.adapter.controller.TransactionController;
 import br.com.compass.adapter.controller.UserController;
 import br.com.compass.core.domain.account.Account;
-import br.com.compass.core.domain.user.User;
 
 import java.util.Scanner;
 
@@ -34,10 +34,10 @@ public class App {
 
             switch (option) {
                 case 1:
-                    User user = UserController.login(scanner);
-                    if(user != null) {
+                    Account account = AccountController.login(scanner);
+                    if(account != null) {
                         System.out.println("Login successful.");
-                        bankMenu(scanner, user);
+                        bankMenu(scanner, account);
                     }
                     break;
                 case 2:
@@ -53,9 +53,9 @@ public class App {
         }
     }
 
-    public static void bankMenu(Scanner scanner, User user) {
+    public static void bankMenu(Scanner scanner, Account account) {
         boolean running = true;
-        Account account = AccountController.get(user.getId());
+
         while (running) {
             System.out.println("========= Bank Menu =========");
             System.out.println("|| 1. Deposit              ||");
@@ -68,30 +68,28 @@ public class App {
             System.out.print("Choose an option: ");
 
             int option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
-                    // ToDo...
-                    System.out.println("Deposit.");
+                    AccountController.addBalance(scanner, account);
+                    System.out.println("You have " + account.getFormatterBalance() + ".");
                     break;
                 case 2:
-                    // ToDo...
-                    System.out.println("Withdraw.");
+                    AccountController.withdrawBalance(scanner, account);
+                    System.out.println("You have " + account.getFormatterBalance() + ".");
                     break;
                 case 3:
                     System.out.println("You have " + account.getFormatterBalance() + ".");
-                    System.out.println("Check Balance.");
                     break;
                 case 4:
-                    // ToDo...
-                    System.out.println("Transfer.");
+                    AccountController.transferBalance(scanner, account);
+                    System.out.println("You have " + account.getFormatterBalance() + ".");
                     break;
                 case 5:
-                    // ToDo...
-                    System.out.println("Bank Statement.");
+                    TransactionController.listTransactions(account.getAccountId());
                     break;
                 case 0:
-                    // ToDo...
                     System.out.println("Exiting...");
                     running = false;
                     return;

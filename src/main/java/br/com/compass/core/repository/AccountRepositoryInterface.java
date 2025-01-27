@@ -4,5 +4,7 @@ import br.com.compass.core.domain.account.Account;
 
 public interface AccountRepositoryInterface {
     void save(Account account) throws Exception;
-    Account get(Integer userId) throws Exception;
+    Account getByAccountNumber(String accountNumber) throws Exception;
+    Account addBalance(Account account, Double amount) throws Exception;
+    Account withdrawBalance(Account account, Double amount) throws Exception;
 }

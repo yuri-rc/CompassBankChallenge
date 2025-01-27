@@ -8,16 +8,16 @@ import java.time.LocalDate;
 public class CreateUserVoter implements Voter<CreateUserInput> {
 
     @Override
-    public void invoke(CreateUserInput input) {
-        if (input == null) {
+    public void invoke(CreateUserInput useCaseInput) {
+        if (useCaseInput == null) {
             throw new IllegalArgumentException("Input cannot be null.");
         }
 
-        validateName(input.name());
-        validateBirthDate(input.birthDate());
-        validateCPF(input.cpf());
-        validatePhone(input.phone());
-        validatePassword(input.password(), input.confirmPassword());
+        validateName(useCaseInput.name());
+        validateBirthDate(useCaseInput.birthDate());
+        validateCPF(useCaseInput.cpf());
+        validatePhone(useCaseInput.phone());
+        validatePassword(useCaseInput.password(), useCaseInput.confirmPassword());
     }
 
     private void validateName(String name) {

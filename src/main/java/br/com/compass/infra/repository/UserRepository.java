@@ -34,13 +34,13 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     @Override
-    public User getByCpf(String cpf) throws Exception {
-        String sql = "SELECT * FROM BankUser WHERE cpf = ?";
+    public User getById(Integer id) throws Exception {
+        String sql = "SELECT * FROM BankUser WHERE id = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, cpf);
+            statement.setInt(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {

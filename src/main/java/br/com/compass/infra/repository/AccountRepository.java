@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class AccountRepository implements AccountRepositoryInterface {
     @Override
-    public void save(Account account) throws Exception{
+    public void save(Account account) throws Exception {
         try (Connection connection = DatabaseConnection.getConnection()) {
             String accountNumber = generateAccountNumber();
 
@@ -26,13 +26,13 @@ public class AccountRepository implements AccountRepositoryInterface {
     }
 
     @Override
-    public Account get(Integer userId) throws Exception {
-        String sql = "SELECT * FROM Account WHERE user_id = ?";
+    public Account getByAccountNumber(String accountNumber) throws Exception {
+        String sql = "SELECT * FROM Account WHERE account_number = ?";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, userId);
+            statement.setString(1, accountNumber);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -42,11 +42,48 @@ public class AccountRepository implements AccountRepositoryInterface {
                     );
                     account.setAccountNumber(resultSet.getString("account_number"));
                     account.setBalance(resultSet.getDouble("balance"));
+                    account.setAccountId(resultSet.getInt("id"));
                     return account;
                 }
             }
         }
         return null;
+    }
+
+    @Override
+    public Account addBalance(Account account, Double amount) throws Exception {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE Account SET balance = balance + ? WHERE account_number = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setDouble(1, amount);
+            statement.setString(2, account.getAccountNumber());
+
+            statement.executeUpdate();
+
+            double newBalance = this.getByAccountNumber(account.getAccountNumber()).getBalance();
+
+            account.setBalance(newBalance);
+
+            return account;
+        }
+    }
+
+    @Override
+    public Account withdrawBalance(Account account, Double amount) throws Exception {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE Account SET balance = balance - ? WHERE account_number = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setDouble(1, amount);
+            statement.setString(2, account.getAccountNumber());
+
+            statement.executeUpdate();
+
+            double newBalance = this.getByAccountNumber(account.getAccountNumber()).getBalance();
+
+            account.setBalance(newBalance);
+
+            return account;
+        }
     }
 
     private String generateAccountNumber() {
