@@ -1,7 +1,6 @@
 package br.com.compass.core.voter.account;
 
 import br.com.compass.core.domain.account.Account;
-import br.com.compass.core.usecase.account.input.AddBalanceInput;
 import br.com.compass.core.usecase.account.input.TransfereBalanceInput;
 import br.com.compass.core.voter.Voter;
 import br.com.compass.infra.repository.AccountRepository;
