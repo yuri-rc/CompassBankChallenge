@@ -34,10 +34,10 @@ public class App {
 
             switch (option) {
                 case 1:
-                    User user = UserController.login(scanner);
-                    if(user != null) {
+                    Account account = AccountController.login(scanner);
+                    if(account != null) {
                         System.out.println("Login successful.");
-                        bankMenu(scanner, user);
+                        bankMenu(scanner, account);
                     }
                     break;
                 case 2:
@@ -53,7 +53,7 @@ public class App {
         }
     }
 
-    public static void bankMenu(Scanner scanner, User user) {
+    public static void bankMenu(Scanner scanner, Account account) {
         boolean running = true;
         Account account = AccountController.get(user.getId());
         while (running) {
