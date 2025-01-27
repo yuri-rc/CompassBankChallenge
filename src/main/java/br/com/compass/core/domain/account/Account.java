@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class Account {
+    private Integer id;
     private String accountNumber;
     private final String accountType;
     private double balance;
@@ -12,6 +13,14 @@ public class Account {
     public Account(String accountType, int userId) {
         this.accountType = accountType;
         this.userId = userId;
+    }
+
+    public void setAccountId(Integer number) {
+        id = number;
+    }
+
+    public Integer getAccountId() {
+        return id;
     }
 
     public void setAccountNumber(String number) {
